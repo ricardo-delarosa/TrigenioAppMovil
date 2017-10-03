@@ -1,0 +1,30 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "co.itac.mobile.test"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "co.itac.mobile.test"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "co.itac.mobile.test"
+        },
+        "cordova-plugin-device-orientation": {
+            "PACKAGE_NAME": "co.itac.mobile.trigenio"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "co.itac.mobile.trigenio"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "co.itac.mobile.trigenio"
+        }
+    },
+    "dependent_plugins": {}
+}

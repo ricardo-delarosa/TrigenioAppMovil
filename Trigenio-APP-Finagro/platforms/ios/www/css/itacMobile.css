@@ -1,0 +1,643 @@
+@CHARSET "ISO-8859-1"; 
+
+table, th, td {
+    border-style:none;
+    border-collapse: collapse;
+}
+
+.altoHeader{
+    left:0px !important;    
+    height:51px;
+    min-width: 100%;
+    z-index: 1;
+    position: fixed;
+    top: 0px; 
+    background-color: white;  	
+}
+
+.cd-main-content {
+   z-index: -1;
+   top: 51px !important; 
+   width:100%;
+   height:100%;
+}
+
+.clase-scroll-misional {
+   left:0px;
+   margin-top:51px;
+   margin-right:0;
+   margin-bottom:0;
+   margin-left:0;   
+   overflow-y:auto; 
+   overflow: scroll;
+   z-index: -1;
+}   
+
+.indice-z-fondo {
+   z-index:-1;    
+}
+
+.clase-scroll {
+   margin-top:0px;
+   margin-right:0;
+   margin-left:0;   
+   overflow-y:auto; 
+   overflow: scroll;
+   z-index: -1;
+}
+   
+@media screen and (min-height: 506px) {	
+	footer {
+	   margin-top: -51px; 
+	   height: 51px;  
+	   clear: both;   
+	   bottom: 0;   
+	   min-width: 100%;
+	   position: fixed;
+	}	
+}
+ 
+.button-izq {
+   border-top: 1px solid #00803e;
+   border-bottom:none;
+   border-left:none;
+   border-right:none;   
+   background: #00803e;
+   background: -webkit-gradient(linear, left top, left bottom, from(#00803e), to(#00803e));
+   background: -webkit-linear-gradient(top, #00803e, #00803e);
+   background: -moz-linear-gradient(top, #00803e, #00803e);
+   background: -ms-linear-gradient(top, #00803e, #00803e);
+   background: -o-linear-gradient(top, #00803e, #00803e);
+   padding: 5px 10px;
+   -moz-border-radius: 8px;
+   -webkit-border-radius: 8px 0 0 8px;
+   border-radius: 8px 0 0 8px;   
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 14px;
+   font-family: Verdana;
+   font-weight: bold;
+   text-decoration: none;
+   vertical-align: middle;
+   height: 30px;
+   width:  100px;   
+   }
+.button-izq:hover {
+   border-top-color: #00803e;
+   background: #00803e;
+   color: #FFFFFF;   /* color: #000; */
+   }
+.button-izq:active {
+   border-top-color: #00803e;
+   background: #00803e;
+   }
+/*
+.button:hover {
+   border-top-color: #00803e;
+   background: #00803e;
+   color: #ccc;
+   }
+   -webkit-border-radius: 8px;
+   border-radius: 8px;
+
+   border-top: 1px solid #00803e;
+*/   
+.button-der {
+   border-top: 1px solid #00803e;
+   border-bottom:none;
+   border-left:none;
+   border-right:none;   
+   background: #00803e;
+   background: -webkit-gradient(linear, left top, left bottom, from(#00803e), to(#00803e));
+   background: -webkit-linear-gradient(top, #00803e, #00803e);
+   background: -moz-linear-gradient(top, #00803e, #00803e);
+   background: -ms-linear-gradient(top, #00803e, #00803e);
+   background: -o-linear-gradient(top, #00803e, #00803e);
+   padding: 5px 10px;
+   -moz-border-radius: 8px;
+   -webkit-border-radius: 0 8px 8px 0;
+   border-radius: 0 8px 8px 0;   
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 14px;
+   font-family: Verdana;
+   font-weight: bold;
+   text-decoration: none;
+   vertical-align: middle;
+   height: 30px;
+   width:  100px;   
+   }
+.button-der:hover {
+   border-top-color: #00803e;
+   background: #00803e;
+   color: #FFFFFF;
+   }
+.button-der:active {
+   border-top-color: #00803e;
+   background: #00803e;
+   }
+/* boton central */
+.button-center {
+   margin:auto !important;
+   border-top: 1px solid #00803e;
+   border-bottom: 1px solid #00803e;
+   border-left: 1px solid #00803e;
+   border-right: 1px solid #00803e;
+   background: #00803e;
+   background: -webkit-gradient(linear, left top, left bottom, from(#00803e), to(#00803e));
+   background: -webkit-linear-gradient(top, #00803e, #00803e);
+   background: -moz-linear-gradient(top, #00803e, #00803e);
+   background: -ms-linear-gradient(top, #00803e, #00803e);
+   background: -o-linear-gradient(top, #00803e, #00803e);
+   padding: 5px 10px;
+   -moz-border-radius: 8px;
+   -webkit-border-radius: 8px 8px 8px 8px;
+   border-radius: 8px 8px 8px 8px;   
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 14px;
+   font-family: Verdana;
+   font-weight: bold;
+   text-decoration: none;
+   vertical-align: middle;
+   height: 30px;
+   width:  100px;  
+
+   }
+.button-center:hover {
+   border-top-color: #00803e;
+   background: #00803e;
+   color: #FFFFFF;
+   }
+.button-center:active {
+   border-top-color: #00803e;
+   background: #00803e;
+   }
+
+.button-center-blanco {
+   border-top: 1px solid #FFFFFF;
+   border-bottom: 1px solid #FFFFFF;
+   border-left: 1px solid #FFFFFF;
+   border-right: 1px solid #FFFFFF;
+   background: #FFFFFF;
+   background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#FFFFFF));
+   background: -webkit-linear-gradient(top, #FFFFFF, #FFFFFF);
+   background: -moz-linear-gradient(top, #FFFFFF, #FFFFFF);
+   background: -ms-linear-gradient(top, #FFFFFF, #FFFFFF);
+   background: -o-linear-gradient(top, #FFFFFF, #FFFFFF);
+   padding: 5px 10px;
+   -moz-border-radius: 8px;
+   -webkit-border-radius: 8px 8px 8px 8px;
+   border-radius: 8px 8px 8px 8px;   
+   -webkit-box-shadow: rgba(255,255,255,0.0) 0 1px 0;
+   -moz-box-shadow: rgba(255,255,255,0.0) 0 1px 0;
+   box-shadow: rgba(255,255,255,0.0) 0 1px 0;
+   text-shadow: rgba(255,255,255,0.0) 0 1px 0;
+   color: white;
+   font-size: 14px;
+   font-family: Verdana;
+   font-weight: bold;
+   text-decoration: none;
+   vertical-align: middle;
+   height: 30px;
+   width:  100px;   
+   }
+/*   
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;   
+*/   
+.button-center-blanco:hover {
+   border-top-color: #FFFFFF;
+   background: #FFFFFF;
+   color: #FFFFFF;
+   }
+.button-center-blanco:active {
+   border-top-color: #FFFFFF;
+   background: #FFFFFF;
+   }   
+   
+
+/* border-top-color: #00803e; */ 
+
+.parrafo {
+    padding-top: 8px;	
+    padding-bottom: 8px;
+    width:  95%;
+    text-align: justify;
+    text-justify: inter-word;        
+    font-size: 14px;
+    font-family: Verdana;
+    font-weight: normal;
+    text-decoration: none;
+    color: black;    
+}
+
+.parrafo-justify {
+    padding-top: 8px;	
+    padding-bottom: 8px;
+    width:  100%;
+    text-align: justify;
+    text-justify: inter-word;        
+    font-size: 14px;
+    font-family: Verdana;
+    font-weight: normal;
+    text-decoration: none;
+    color: black;
+}
+
+/*     text-justify: inter-word;      */
+.parrafo-verde {
+    padding-top: 8px;	
+    padding-bottom: 8px;
+    width:  100%;
+    text-align: center;
+    font-size: 18px;
+    font-family: Verdana;
+    font-weight: bold;
+    text-decoration: none;
+    color: #00803e;    
+}
+
+.textarea-verdana {
+    font-size: 14px !important;
+    font-family: Verdana;
+    font-weight: normal;
+    border-style: solid !important;
+    border-width: 2px;
+    
+}
+/*
+    overflow-x: scroll;
+    border-top: 1px solid black !important;
+*/
+.div-dos-botones {
+   height: 82px;	
+   vertical-align: text-bottom;	
+}
+
+
+/* font-weight: bold;   display: table-cell; ;width: 710px; */
+
+/* width: 710px; */
+.fixed-ratio-resize { /* basic responsive img */
+	max-width: 100%;
+	height: auto;  /*  height: 100% !Important; */ 
+	width: 100% !Important; /* width: auto\9;*/ /* IE8 */
+}
+/*
+    padding-right: 0px;
+    padding-left: 0px;
+*/
+
+.ui-icon-treslineas:after {
+	background-image: url("img/finagro_tres_lineas_20_20.png") !important;
+} 	
+/* background: url("img/item_menu_finagro.jpg") no-repeat rgba(0, 128, 62 , 0.4) !important;	 */
+ 	
+.ui-icon-llave:after {
+	background-image: url("img/old_key_20_20.png") !important;
+}
+
+.ui-icon-lupa:after {
+	background-image: url("img/lupa_20_20.png") !important;
+}
+
+	
+.ui-icon-myapp-settings {
+	background: url("img/item_menu_finagro.jpg") no-repeat rgba(0, 128, 62 , 0.4) !important;
+}	
+
+.mycollapsibleheading {
+	background: url("img/item_menu_finagro.jpg") no-repeat rgba(0, 128, 62 , 0.4) !important;
+}	
+
+.un-background-menu {
+    color: white !important; 
+    background-color: rgb(0, 128, 62) !important;
+}
+
+/* .ui-icon-fondo:after */
+.ui-icon-fondo {
+	background-image: url("img/finagro_planta_v2.jpg") no-repeat !important;
+	height: 100%;   
+    width: 100% !Important;
+}
+
+
+/* height:41px; */
+.altoElementos{
+	height:inherit !important;
+        z-index:1;
+        display:block;
+}
+
+
+.dropdown {
+    position: absolute ;
+    display: inline-block ;
+    width:100% ;
+    height:51px !important;
+    left:0px !important;
+}
+/* position: relative; original */
+/* position: absolute; */
+
+/*
+h1.logo {
+    text-indent: -9999px;
+    height:115px;
+    margin-top: 0px;
+}
+*/
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    width:100% !important;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 0px 0px;
+    z-index: 1;
+}
+
+/*
+    z-index: 1;
+*/
+
+* {
+   margin:0;
+   padding:0;
+}
+
+html, body, #wrap {
+   height: 100%;
+}
+body  #wrap {
+   height: auto;
+   min-height: 100%;
+}
+section {
+   padding-bottom: 60px;
+} 
+
+@media screen and (min-height: 800px) {
+
+	.button-herradura {
+	   border-top: 2px solid #00803e;
+	   border-bottom: 2px solid #00803e;
+	   border-right: 2px solid #00803e;
+	   border-left: none;
+	   background: #FFFFFF;
+	   background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#FFFFFF));
+	   background: -webkit-linear-gradient(top, #FFFFFF, #FFFFFF);
+	   background: -moz-linear-gradient(top, #FFFFFF, #FFFFFF);
+	   background: -ms-linear-gradient(top, #FFFFFF, #FFFFFF);
+	   background: -o-linear-gradient(top, #FFFFFF, #FFFFFF);
+	   padding: 5px 10px;
+	   -moz-border-radius: 8px;
+	   -webkit-border-radius: 0 8px 8px 0;
+	   border-radius: 0 8px 8px 0;   
+	   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	   box-shadow: rgba(0,0,0,1) 0 1px 0;
+	   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+	   color: #00803e; 
+	   font-size: 18px;
+	   font-family: Verdana;
+	   font-weight: bold;
+	   text-decoration: none;
+	   vertical-align: middle;
+	   text-align: left;
+	   height: 30px;
+	   width:  90%;
+	}
+/* verde_planta_verde_w548_h870.png  background-size: 100% 92% !important;*/
+.main-header {
+    background-image: url(../img/finagro_planta_548_401_new.png);
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: cover;
+    width: 100% !important;
+    height: 100% !important;
+    position: fixed; 
+    top:51px !important;    
+    left: 0; 
+    min-width: 100%;
+    min-height: 100%;
+}
+.texto-verde {
+   font-size: 18px;
+   font-family: Verdana;
+   font-weight: bold;
+   text-decoration: none;
+   vertical-align: middle;	
+   text-align: left;
+   color: #00803E;   
+}
+.texto-negro {
+   font-size: 18px;
+   font-family: Verdana;
+   font-weight: bold;
+   text-decoration: none;
+   vertical-align: middle;	
+   text-align: left;
+   color: black;   
+}
+.texto-negro-normal {
+   font-size: 18px;
+   font-family: Verdana;
+   font-weight: normal;
+   text-decoration: none;
+   vertical-align: middle;	
+   text-align: left;
+   color: black;   
+}
+
+/* height: 45px; */
+.footer-verdeoliva {
+   display: block;              
+   font-size: 18px;
+   font-family: Verdana;
+   font-weight: normal;
+   text-decoration: none;
+   vertical-align: middle;   	
+   text-align: middle ;
+   color: white; 
+   background-color: #6D9A33;  
+   height: 51px;   
+   width: 100% !Important;
+   padding-top: 6px;   
+   padding-left: 0cm !Important;
+   right: 0;
+   bottom: 0;
+   left: 0;   
+   position:fixed;
+}	
+	
+}
+
+@media not screen and (min-height: 800px) {
+
+	.button-herradura {
+	   border-top: 2px solid #00803e;
+	   border-bottom: 2px solid #00803e;
+	   border-right: 2px solid #00803e;
+	   border-left: none;
+	   background: #FFFFFF;
+	   background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#FFFFFF));
+	   background: -webkit-linear-gradient(top, #FFFFFF, #FFFFFF);
+	   background: -moz-linear-gradient(top, #FFFFFF, #FFFFFF);
+	   background: -ms-linear-gradient(top, #FFFFFF, #FFFFFF);
+	   background: -o-linear-gradient(top, #FFFFFF, #FFFFFF);
+	   padding: 5px 10px;
+	   -moz-border-radius: 8px;
+	   -webkit-border-radius: 0 8px 8px 0;
+	   border-radius: 0 8px 8px 0;   
+	   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	   box-shadow: none;
+	   text-shadow: none;
+	   color: #00803e; 
+	   font-size: 14px;
+	   font-family: Verdana;
+	   font-weight: bold;
+	   text-decoration: none;
+	   vertical-align: middle;
+	   text-align: left;
+	   height: 30px;
+	   width:  90%;
+	}
+/*
+verde_planta_verde_w548_h870.png 
+background-size: 100% 88% !important;
+*/	
+.main-header {
+    background-image: url(../img/finagro_planta_548_401_new.png);
+    background-repeat: no-repeat;
+    background-position: left top;    
+    background-size: cover;
+    width: 100% !important;
+    height: 100% !important;
+    position: fixed; 
+    top: 51px !important; 
+    left: 0; 
+    min-width: 100%;
+    min-height: 100%;	
+}
+
+.texto-verde {
+   font-size: 14px;
+   font-family: Verdana;
+   font-weight: bold;
+   text-decoration: none;
+   vertical-align: middle;	
+   text-align: left;
+   color: #00803E;   
+}
+.texto-negro {
+   font-size: 14px;
+   font-family: Verdana;
+   font-weight: bold;
+   text-decoration: none;
+   vertical-align: middle;	
+   text-align: left;
+   color: black;   
+}
+.texto-negro-normal {
+   font-size: 14px;
+   font-family: Verdana;
+   font-weight: normal;
+   text-decoration: none;
+   vertical-align: middle;	
+   text-align: left;
+   color: black;   
+}
+/*    height: 45px; */
+.footer-verdeoliva {
+   display: block;              
+   font-size: 14px;
+   font-family: Verdana;
+   font-weight: normal;
+   text-decoration: none;
+   vertical-align: middle;   	
+   text-align: middle ;
+   color: white; 
+   background-color: #6D9A33;  
+   height: 51px;   
+   width: 100% !Important;
+   padding-top: 6px;
+   padding-left: 0cm !Important;
+   right: 0;
+   bottom: 0;
+   left: 0;   
+   position:fixed;
+}
+	
+}
+
+	   
+
+.button-herradura:hover {
+   border-top: 2px solid #00803e;
+   border-bottom: 2px solid #00803e;
+   border-right: 2px solid #00803e;
+   background: #FFFFFF;
+   color: #00803e;
+}
+
+.button-herradura:active {
+   border-top: 2px solid #00803e;
+   border-bottom: 2px solid #00803e;
+   border-right: 2px solid #00803e;   
+   background: #FFFFFF;
+   color: #00803e;   
+}  
+
+.no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+
+
+
+
+
+@media screen and (max-width: 360px) {
+
+.class-canvas {
+   font-size: 14px !important;
+   font-family: Verdana;
+   font-weight: normal;    
+   border-style: solid !important;
+   border-width: 2px;    
+   border-color: black;
+}
+
+}
+@media screen and (min-width: 362px) {
+
+.class-canvas {
+   font-size: 32px !important;
+   font-family: Verdana;
+   font-weight: normal;    
+   border-style: solid !important;
+   border-width: 2px;    
+   border-color: black;
+}
+
+}
+
+/*
+   border:2px solid #000000;
+
+
+*/

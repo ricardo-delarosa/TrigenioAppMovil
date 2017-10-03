@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2017 ITAC. All rights reserved.
+-->
+<html>
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+        <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+        <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+        <!--link rel="stylesheet" type="text/css" href="css/index.css" /-->
+        <link rel="stylesheet" href="css/jquery-ui.css">
+        <link rel="stylesheet" type="text/css" href="css/itacMobile.css" />
+
+        <script src="js/jquery-1.12.4.min.js"></script>
+        <script src="js/jquery-ui.js"></script>
+        <script src="js/itacMobile.js"></script>
+        <script src="properties/properties.js"></script>	
+
+        <title>Finagro App</title>
+
+        <script type="text/javascript">
+            var idSession = null;
+
+            $(function () {
+                $("#dialogError").dialog({
+                    dialogClass: "no-close",
+                    autoOpen: false,
+                    modal: true ,
+                    show: {
+                        effect: "none",
+                        duration: 500
+                    },
+                    hide: {
+                        effect: "none",
+                        duration: 500
+                    }
+                });
+                
+                $("#dialogEnProceso").dialog({
+                    dialogClass: "no-close",
+                    autoOpen: false,
+                    modal: true ,
+                    show: {
+                        effect: "none",
+                        duration: 500
+                    },
+                    hide: {
+                        effect: "none",
+                        duration: 500
+                    }
+                });
+                $("#dialogEnProceso").dialog( "option", "height", 140 );
+            });
+
+
+            function obtenerInfoMisional(response) {
+                var i = 0;
+                var infoOrganizacional ;
+                /*
+                infoOrganizacional["mision"] = "" ;
+                infoOrganizacional["vision"] = "" ;
+                infoOrganizacional["condicionesFinancieras"] = "" ;
+                */        
+                if ((response != null) && (response.responseJSON != null)) {
+                    infoOrganizacional = response.responseJSON;
+                }
+                /*
+                $("#mision").html(infoOrganizacional["mision"] );
+
+                $("#vision").html(infoOrganizacional["vision"]);
+                $("#condicionesFinancierasVigentes").html( infoOrganizacional["condicionesFinancieras"] );
+                */
+                $("#mision").html( infoOrganizacional["mision"] );
+                $("#vision").html( infoOrganizacional["vision"] );
+                $("#condicionesFinancierasVigentes").html( infoOrganizacional["condicionesFinancieras"] );                
+                
+                
+                $( "#dialogEnProceso" ).dialog( "close" );
+
+            }
+
+
+            $(document).ready(function () {
+                var i=0;
+                idSession = getQueryVariable('idSession');
+                /* calculo ancho pantalla*/
+                /*
+                var winwidth = $(window).width();
+                var delta = winwidth-102 ;
+
+                $("#backgroundimage").css("height", delta.toString() );                    
+                */
+                /*
+                while ( i < arregloPasosCredito.length ) {
+                   
+                  
+                  $("#pasos").html( $("#pasos").html() + arregloPasosCredito[i] + "<br>");    
+                  
+                  if ( i < (arregloPasosCredito.length-1) ) {
+                   $("#pasos").html( $("#pasos").html() + "<br>")        
+                  }
+                  
+                  i=i+1;
+                }
+                */
+                
+                
+                
+                
+                /*
+                $("#textoFooter").html(textoFooter);
+                $( "#dialogEnProceso" ).dialog( "open" );
+                */
+               
+                /*
+                 La tablet de ITAC tiene winheight===1019 
+
+
+                $.ajax({
+                    url: 'http://' + dirIpServiciosREST + ':' + puertoServiciosREST + '/' + componenteServicios + '/rest/serviciosfinagro/obtenerInformacionOrganizacional',
+                    type:"POST",
+                    dataType: "json",
+                    complete: obtenerInfoMisional ,
+                    timeout: 20000 ,
+                    error: mostrarError 
+                });
+                 */        
+                 
+            });
+
+        </script>
+
+    </head>
+
+    <body>
+        <header class="altoHeader">
+            <div class="dropdown altoElementos" style="width:100%;padding:0px;">
+                <div class="altoElementos" style="padding:0px;">
+                    <table style="height:51px;width:100%;padding:0px;">
+                        <tr>
+                            <td width="50%" style="padding:0px;">	
+                                <span>
+                                    <a id="tres_lineas"  onclick="onClickMenu();" href="#">
+                                        <img id="iconoMenu1" style="display:inline-block" src="img/finagro_tres_lineas_46px_46px.png" alt=""/>
+                                        <img id="iconoMenu2" style="display:none" src="img/finagro_una_linea_46px_46px.png" alt=""/>
+                                    </a>
+                                </span>
+                            </td>	
+                            <td width="50%"  style="padding:0px;">	
+                                <span style="float:right">
+                                <img  src="img/logo_finagro_cuadrado_50px_50px.png" alt=""/>
+                                </span>
+                            </td>	
+                        </tr>                                
+                    </table>                    
+                </div>
+                <div id="opcionesMenu" class="dropdown-content altoElementos">
+                    <!-- padding: 0 0 2px 0px; background-color:white; -->
+                    <div style="border-style: none; padding: 0px 0px 0px 0px;background-color:#00803E;margin-bottom:0px;"> 
+                        <a style="padding: 0 0 0 0;background-color:#00803E;" onClick='irPaginaConSessionId("infoMisional.html", idSession)' href = "#">
+                            <img  class="fixed-ratio-resize"  src="img/item_menu_finagro_alto80_font18.png" alt=""/>
+                        </a> 
+                    </div>
+                    <!-- background-color:#00803E; -->
+                    <div style="border-style: none; padding: 0px 0px 0px 0px;background-color:#FFFFFF;margin-bottom:0px;">
+                        <!-- background-color:#FFFFFF; -->
+                        <a style="padding: 0 0 0 0;background-color:#00803E;" onClick='irPaginaConSessionId("InformacionAccesoCreditoInicial.html", idSession)' href = "#"> 
+                            <img  class="fixed-ratio-resize"  src="img/informacion_acceso_a_credito_alto80_font18.png" alt="" style="margin-top:1px;">
+                        </a> 
+                    </div>
+                    <!-- Tercera opcion del menu -->
+                    <div style="border-style: none; padding: 0px 0px 0px 0px;background-color:#FFFFFF;margin-bottom:0px;">
+                        
+                        <a style="padding: 0 0 0 0;background-color:#00803E;" onClick='irPaginaConSessionId("pasosCredito.html", idSession)' href = "#"> 
+                            <img  class="fixed-ratio-resize"  src="img/item_pasos_credito_alto80_font18.png" alt="" style="margin-top:1px;">
+                        </a> 
+                    </div>                     
+                    <!-- Cuarta opcion del menu -->
+                    <div style="border-style: none; padding: 0px 0px 0px 0px;background-color:#FFFFFF;margin-bottom:0px;">
+                        
+                        <a style="padding: 0 0 0 0;background-color:#00803E;" onClick='irPaginaConSessionId("acercaDe.html", idSession)' href = "#"> 
+                            <img  class="fixed-ratio-resize"  src="img/item_acerca_de_alto80_font20.png" alt="" style="margin-top:1px;">
+                        </a> 
+                    </div>                    
+                </div>
+            </div>
+        </header>
+        <main class="cd-main-content" id="backgroundimage" onclick="cerrarMenu();"> 
+
+            <div class="clase-scroll-misional">
+                <div style="border-style: none; padding: 0 0 0 1;background-color:#00803E;">
+                    <a style="padding: 0 0 0 0;background-color:#00803E;" href = "#"> 
+                        <img  class="fixed-ratio-resize"  src="img/item_acerca_de_alto80_font20.png" alt="" style="margin-top:1px;">
+                    </a> 
+                </div>
+
+                <div style="padding-left:0.4cm; !important;margin-top:8px;"> 
+
+                    <!--table>		   
+                        
+                        <tr>
+                            <td>
+                                <h1 class="texto-verde" style="padding-bottom:4px;">Veamos los pasos para acceder a un crédito por línea FINAGRO 
+                                </h1>
+                                
+                            </td>
+                        </tr>
+                    </table-->		                           
+
+                    <section style="padding-bottom:0px;">
+                        <!--input id="botonMision" type="button" class="button-herradura" value="Misión"/-->
+
+                        <!--br-->	
+
+                        <div class="parrafo" id="pasos">
+                            
+El proyecto <b><i>Soluciones Tecnol&oacute;gicas de inclusi&oacute;n financiera para el desarrollo del Agro</i></b> desarrollado por <b><i>ITAC</i></b>, como beneficiario <b><i>FINAGRO</i></b>, se financia con recursos provenientes del <b><i>Fondo Nacional de Financiamiento para la Ciencia, la Tecnolog&iacute;a y la Innovaci&oacute;n Francisco Jos&eacute; de Caldas</i></b>, bajo el marco de la <b><i>Convocatoria para el Desarrollo de Soluciones Innovadoras de Tecnolog&iacute;as de la Informaci&oacute;n para el Sector Agropecuario y Agroindustrial en Colombia – 2015. Con el apoyo de la Alianza Colciencias / MinTic</i></b>.
+
+                        </div>
+                        <div id="tablaCentrada" style="margin:auto;margin-top:8px;margin-right:5px;">
+                        <table>
+						<tr>    
+                              <td WIDTH=50%>
+                                  <img  class="fixed-ratio-resize"  src="img/itac_innovacion_933px_280px.png" onclick="window.location=urlAcercaItac" >  <!-- style="margin-top:1px;" -->
+                              </td>
+							   <td WIDTH=50%>
+                                  <p style="font-family: verdana, serif; font-size:9pt"><b><i>ENTIDAD EJECUTORA:</i></b><br>ITAC, IT APPLICATIONS CONSULTING S.A. </p>
+                              </td>							  
+                            </tr>
+														
+                            <tr>
+                              <td WIDTH=50%>
+                                  <img  class="fixed-ratio-resize" width="123" src="img/logo_finagro_cuadrado_197px_150px.png" onclick="window.location=urlAcercaFinagro" > <!-- style="margin-top:1px;" -->
+                              </td>
+							 <td WIDTH=50%>
+                                  <br><p style="font-family: verdana, serif; font-size:9pt"><b><i>ENTIDAD BENEFICIARIA:</i></b><br>FONDO PARA EL FINANCIAMIENTO DEL SECTOR AGROPECUARIO – FINAGRO</p>
+                              </td> 							  
+                            </tr>     
+                            <tr>    
+                              <td WIDTH=50%>
+                                  <img  class="fixed-ratio-resize"  src="img/ujaveriana.png" onclick="window.location=urlAcercaJaveriana" >  <!-- style="margin-top:1px;" -->
+                              </td>
+							  <td WIDTH=50%>
+                                  <br><p style="font-family: verdana, serif; font-size:9pt"><b><i>ENTIDAD ACOMPAÑANTE:</i></b><br>Grupo de Investigación ISTAR, Pontificia Universidad Javeriana</p>
+                              </td> 							  
+                            </tr>                                
+                                                           
+                        </table> 
+						</div>
+                        
+                        <!--div class="parrafo-verde" id="pasos" onclick="window.location=urlRedireccionarPasosAccederCredito"> Ingrese al simulador de crédito</div-->
+                    </section>
+
+                    <!-- section  style="padding-bottom:0px;">
+                        <input type="button" class="button-herradura" value="Visión"/>
+                        <div class="parrafo" id="vision"></div>
+                    </section -->
+                    
+                    
+                    <!-- section  style="padding-bottom:0px;">                    
+                        <input type="button" class="button-herradura" value="Condiciones Financieras Vigentes"/>
+
+                        <br>
+
+                        <div class="parrafo" id="condicionesFinancierasVigentes">
+                        </div>
+                    </section -->
+
+
+                    <!--div id="parrafoCentrado" style="margin:auto;text-align:center;margin-top:8px;">	   
+                        <span style="margin:auto;">
+                            <a id="button_atras"  style="text-decoration:none;text-align:center important!;" onclick='irPaginaConSessionId("indexStartFondo.html")' href="#"><input type="button" class="button-center" value="Atrás"/></a>
+                        </span>		 
+                    </div-->		  
+
+                    <!--div  style="margin:auto;">	   
+                        
+                            <a id="button_atras_tmp"  style="text-decoration:none;" onclick="" href="#">
+                                <input type="button" class="button-center-blanco" value=""/>
+                            </a>
+                        
+                    </div-->		
+                </div> <!-- cierra div style="padding-left: 0.5cm;" -->
+            </div>  <!-- cierra div class="clase-scroll-misional" -->
+			
+			<div id="parrafoCentrado" style="margin:auto;text-align:center;margin-top:8px">	   
+                        <span style="margin:auto;">
+                            <a id="button_atras"  style="text-decoration:none;text-align:center" onclick='irPaginaConSessionId("indexStartFondo.html")' href="#"><input type="button" class="button-center" value="Atrás"/></a>
+                        </span>		 
+                    </div>
+			<table  border="0'">
+				<tr>
+				<td>&nbsp;</td>
+				</tr>
+				<tr>
+				<td>&nbsp;</td>
+				</tr>
+				<tr>
+				<td>&nbsp;</td>
+				</tr>
+				<tr>
+				<td>&nbsp;</td>
+				</tr>
+			</table>	
+								
+            <div id="dialogError" title="Informaci&oacute;n" style="display:none;">
+                <p id="textoDialogError"></p>   
+                <br>
+                <p style="text-align:center;">
+                    <a id="button_atras"  style="text-decoration:none;" onclick="cerrarVentana()" href="#"> 
+                       <input type="button" class="button-center" value="Aceptar"/>
+                    </a>
+                </p>
+                
+            </div>  
+                <div id="dialogEnProceso" title="Procesando..."  style="display:none;">
+                    <table style="width:100%;padding:0px;">
+                      <tr>
+                        <td> 
+                          <div style="padding-right:10px;">  
+                          <img  src="img/processing_icon_50px_50px.gif" alt=""/> 
+                          </div>                            
+                        </td>                          
+                        <td>                          
+                        Favor espere un momento...
+                        </td>                          
+                      </tr>
+                    </table>
+                </div>            
+            
+            
+            
+            <!--div id="dialogEnProceso" title="Procesando ..."  style="display:none;">
+                  <img  src="img/processing_icon_50px_50px.gif" alt=""/>
+                  <p>Por favor espere un momento ...</p>
+            </div-->
+            
+        </main>   
+
+        <footer>
+           <div id="textoFooter" class="footer-verdeoliva" align="center">		
+              <img  class="fixed-ratio-resize"  src="img/franja_pie_pagina.png" alt=""/>
+           </div>            
+            <!--div id="container" class="footer-verdeoliva" align="center">    
+                <div id="textoFooter" class="footer-verdeoliva" align="center">		
+                </div>
+            </div-->	 
+        </footer>
+
+    </body>
+
+</html>

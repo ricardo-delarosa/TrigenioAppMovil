@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2012-2016 ITAC IT Applications Consulting. All rights reserved.
+-->
+<html>
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+        <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+        <!--meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" /-->
+
+        <link rel="stylesheet" href="css/itacMobile.css">
+        <link rel="stylesheet" href="css/jquery-ui.css">
+        <link rel="stylesheet" href="css/style.css">
+
+        <style>
+            .custom-combobox {
+                position: relative;
+                display: inline-block;
+            }
+            .custom-combobox-toggle {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                margin-left: -1px;
+                padding: 0;
+            }
+            .custom-combobox-input {
+                margin: 0;
+                padding: 5px 10px;
+            }
+            fieldset {
+                border: 0;
+            }
+            label {
+                display: block;
+                margin: 30px 0 0 0;
+            }
+            .overflow {
+                height: 200px;
+            } 
+            
+
+        </style>	
+
+
+        <script src="js/jquery-1.12.4.min.js"></script>
+        <script src="js/jquery-ui.js"></script>
+
+        <script src="properties/properties.js"></script>
+        <script src="js/itacMobile.js"></script>
+
+        <script>
+            var destinosCadsProductivas = null;
+            var logroInvocarServicio = false;
+            var idSession = null;
+            var arrDestinos = null ;
+            var unData = {idSession:""}; 
+            
+            function clear_textbox()
+            { 
+                if ( $("#inputComboBox").val() === "Seleccione el destino" )  {
+                   $("#inputComboBox").val("") ;
+                }
+            }
+
+            /* 
+             * Proposito: Funcion que inicia los elementos graficos.
+             */
+            $(function () {
+                var winwidth = $(window).width();
+                $("#valorActivos").selectmenu({width:360});
+                /* $("#valorActivos").selectmenu({width:360}); */
+                if ( winwidth >= 500 ) {
+                   $("#valorActivos").selectmenu( "option", "width", 360 );
+                }
+                else {
+                   $("#valorActivos").selectmenu( "option", "width", 260 );
+                }
+                
+                
+                 
+                 $( document ).tooltip();
+                 
+                 /* */
+                 
+                 $( document ).tooltip({ 
+                    content: function(callback) {   
+                       callback( $(this).prop('title').replace('|', '<br />').replace('|', '<br />').replace('|', '<br />').replace('|', '<br />').replace('%' , '<span style=\"color:#00803e;font-weight:bold;\">' ).replace('_' , '</span>'  ).replace('*', '<img src=\"img/tablaTipoProductor.png\" />' ).replace('{' , '<div class=\"parrafo-justify\">').replace('}' , '</div>') ); 
+                    }
+                 });        
+
+                $("#dialogError").dialog({
+                    dialogClass: "no-close",
+                    autoOpen: false,
+                    modal: true ,
+                    show: {
+                        effect: "none",
+                        duration: 1000
+                    },
+                    hide: {
+                        effect: "none",
+                        duration: 1000
+                    }
+                });
+                
+                $("#dialogEnProceso").dialog({
+                    dialogClass: "no-close",
+                    autoOpen: false,
+                    modal: true ,
+                    show: {
+                        effect: "none",
+                        duration: 500
+                    },
+                    hide: {
+                        effect: "none",
+                        duration: 500
+                    }
+                });  
+                
+                $("#dialogEnProceso").dialog( "option", "height", 140 );
+
+
+                /* inicio dialogo tooltip */
+                $("#dialog").dialog({
+                    autoOpen: false,
+                    show: {
+                        effect: "none",
+                        duration: 1000
+                    },
+                    hide: {
+                        effect: "none",
+                        duration: 1000
+                    }
+                });
+                /* fin dialogo tooltip */
+
+                $( "#valorActivos" ).selectmenu({
+                    open: function( event, ui ) {
+                       cerrarMenu();    
+                    }
+                });
+
+
+                /* */
+                $.widget("custom.combobox", {
+                    _create: function () {
+                        this.wrapper = $("<span>")
+                                .addClass("custom-combobox")
+                                .insertAfter(this.element);
+
+                        this.element.hide();
+                        this._createAutocomplete();
+                        this._createShowAllButton();
+                    },
+                    _createAutocomplete: function () {
+                        var selected = this.element.children(":selected"),
+                                value = selected.val() ? selected.text() : "";
+
+                        this.input = $("<input id='inputComboBox' >")
+                                .appendTo(this.wrapper)
+                                .val(value)
+                                .attr("title", "")
+                                .addClass("custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left")
+                                .autocomplete({
+                                    delay: 0,
+                                    minLength: 0,
+                                    source: $.proxy(this, "_source")
+                                })
+                                .tooltip({
+                                    classes: {
+                                        "ui-tooltip": "ui-state-highlight"
+                                    }
+                                });
+
+                        this._on(this.input, {
+                            autocompleteselect: function (event, ui) {
+                                ui.item.option.selected = true;
+								/*alert('autocompleteselect: value=' + ui.item.option.value ) ; */ /* DEBUG */
+                                this._trigger("select", event, {
+                                    item: ui.item.option
+                                });
+                            },
+                            autocompletefocus: function (event, ui) {
+                                /*ui.item.option.selected = true;*/
+				/*alert('autocompletefocus: value=' + ui.item.option.value ) ; */ /* DEBUG */
+				ui.item.option.prototype.click();
+				/*
+                                this._trigger("select", event, {
+                                    item: ui.item.option
+                                });
+								*/
+                            },
+                            autocompletechange: "_removeIfInvalid"
+                        });
+                    },
+                    _createShowAllButton: function () {
+                        var input = this.input,
+                                wasOpen = false;
+                        /*
+                         $( "<a>" )
+                         .attr( "tabIndex", -1 )
+                         .attr( "title", "Show All Items" )
+                         */
+                        $("<a>")
+                                .attr("tabIndex", -1)
+                                .attr("title", "")
+                                .tooltip()
+                                .appendTo(this.wrapper)
+                                .button({
+                                    icons: {
+                                        primary: "ui-icon-triangle-1-s"
+                                    },
+                                    text: false
+                                })
+                                .removeClass("ui-corner-all")
+                                .addClass("custom-combobox-toggle ui-corner-right")
+                                .on("mousedown", function () {
+                                    
+                                    /* if ( ( $("#valorActivos").val()!==null ) && ( $("#valorActivos").val() !== "-1" ) ) {*/
+                                    /* if ( ( cadenaProductivaEscogida !==null ) && ( cadenaProductivaEscogida !== "-1" ) ) { */
+                                    var cadenaProductivaEscogida = $("input[type='radio'][name='cadenaProductiva']:checked").val() ;
+                                    
+                                    /*alert('mousedown >' + typeof(cadenaProductivaEscogida) + '<');*/
+                                    
+                                   
+                                    cerrarMenu();                                   
+                                    
+                                    if( typeof(cadenaProductivaEscogida) !== 'undefined' ) { 
+                                    
+                                       /* Seleccionaron un item en el combo de activos */
+                                       clear_textbox();
+                                    
+                                    }
+                                    else {
+                                        mostrarVentanaError('Antes de escoger un \"destino a financiar\" debe seleccionar una \"cadena productiva a financiar\" ');
+                                    }
+                                    
+
+                                    wasOpen = input.autocomplete("widget").is(":visible");                                    
+                                })
+                                .on("click", function () {
+                                    /* if ( ( $("#valorActivos").val()!==null ) && ( $("#valorActivos").val() !== "-1" ) ) { */
+                                    var cadenaProductivaEscogida = $("input[type='radio'][name='cadenaProductiva']:checked").val() ;
+                                    
+                                    /* alert('click >' + typeof(cadenaProductivaEscogida) + '<'); */
+                                    
+                                   
+                                    cerrarMenu();
+                                   
+                                    if(  typeof(cadenaProductivaEscogida) !== 'undefined' ) {                                                                            
+                                       /* Seleccionaron un item en el combo de activos*/ 
+                                       clear_textbox();                                        
+                                    }
+                                    else {
+                                        mostrarVentanaError('Antes de escoger un \"destino a financiar\" debe seleccionar una \"cadena productiva a financiar\"');
+                                    }                                   
+                                    
+                                    input.trigger("focus");
+                                    // Close if already visible
+                                    if (wasOpen) {
+                                        return;
+                                    }
+                                    // Pass empty string as value to search for, displaying all results
+                                    input.autocomplete("search", "");
+                                });
+                    },
+                    _source: function (request, response) {
+                        var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
+                        response(this.element.children("option").map(function () {
+                            var text = $(this).text();
+                            if (this.value && (!request.term || matcher.test(text)))
+                                return {
+                                    label: text,
+                                    value: text,
+                                    option: this
+                                };
+                        }));
+                    },
+                    _removeIfInvalid: function (event, ui) {
+
+                        // Selected an item, nothing to do
+                        if (ui.item) {
+                            return;
+                        }
+
+                        // Search for a match (case-insensitive)
+                        var value = this.input.val(),
+                                valueLowerCase = value.toLowerCase(),
+                                valid = false;
+                        this.element.children("option").each(function () {
+                            if ($(this).text().toLowerCase() === valueLowerCase) {
+                                this.selected = valid = true;
+                                return false;
+                            }
+                        });
+
+                        // Found a match, nothing to do
+                        if (valid) {
+                            return;
+                        }
+
+                        // Remove invalid value
+                        this.input.val("");
+
+                        /*
+                         this.input
+                         .val( "" )
+                         .attr( "title", value + " didn't match any item" )
+                         .tooltip( "open" );
+                         */
+                        this.element.val("");
+                        this._delay(function () {
+                            this.input.tooltip("close").attr("title", "");
+                        }, 2500);
+                        this.input.autocomplete("instance").term = "";
+                    },
+                    _destroy: function () {
+                        this.wrapper.remove();
+                        this.element.show();
+                    }
+                });
+                /*  
+                $("#combobox").combobox();
+				*/
+				
+                $( "#combobox" ).combobox({
+                   focus: function( event, ui ) {
+                      alert('combobox: focus: clic');                       
+                   }                     
+                });				
+				
+                $("#toggle").on("click", function () {
+                    /*alert('toggle clic');*/
+                    cerrarMenu();
+                    clear_textbox();
+                    $("#combobox").toggle();
+                });
+                
+
+
+                $( "#combobox" ).combobox({
+                   change: function( event, ui ) {
+                      /*alert('focus clic'); */
+                   }        
+                });
+
+                $( "#combobox" ).combobox({
+                   click: function( event, ui ) {
+                      /*alert('onclic combobox'); */
+                   }        
+                });        
+        
+                /*
+                $( "#combobox" ).combobox({
+                   focus: function( event, ui ) {
+                      alert('focus clic'); 
+                   }                
+                }               
+                */                
+                /*
+                $( "#combobox" ).combobox({
+                   select: function( event, ui ) {
+                      alert('select clic');                        
+                   }
+                   ,
+                   focus: function( event, ui ) {
+                      alert('focus clic'); 
+                   }                    
+                });
+                */
+            });
+            
+
+
+            /*
+             * Proposito: Validar diligenciamiento de los 3 datos para consultar credito e invocar la pagina HTML que muestra el resultado. 
+             */
+            function onClickResultado() {
+                var codValorActivos = $("#valorActivos").val();
+                var idCadenaProductiva = $("input[type='radio'][name='cadenaProductiva']:checked").val();
+                var destinoAFinanciar = $("#inputComboBox").val();
+                var i=0 ;
+                var encontro = false;
+                var codDestinoAFinanciar = "";
+                
+                
+                /* 
+                var destinoAFinanciar = $("#combobox").val(); 
+                 */
+
+                /* if ( (codValorActivos==="-1") || (idCadenaProductiva===undefined) || (destinoAFinanciar==="-1") ) { */
+                if ((codValorActivos == null) || (idCadenaProductiva === undefined) || (destinoAFinanciar === null) || (destinoAFinanciar === "Seleccione el destino") || (destinoAFinanciar === "")  ) {
+                    mostrarVentanaError( errorFaltaDiligenciarCampo );
+                    /*
+                     mostrarError( stringError )
+                     */
+                } else {
+
+                    while ( i<arrDestinos.length) {
+
+                       if ( arrDestinos[i].destino===destinoAFinanciar ) {
+                          encontro = true;
+                          break; 
+                       }  
+
+                       i=i+1;    
+                    }
+
+                    if (encontro) {
+                       codDestinoAFinanciar = arrDestinos[i].codDestino;
+                    }
+
+                    location.href = "mostrarResultado.html?idSession=" + idSession + "&codValorActivos=" + codValorActivos + "&idCadenaProductiva=" + idCadenaProductiva + "&destinoAFinanciar=" + codDestinoAFinanciar;
+                }
+            }
+
+            /*
+             Proposito: Llenar el combo de rango de activos con la respuesta del servicio REST. 
+             */
+            function llenarComboRangoActivos(response) {
+                var i = 0;
+                var arregloRangoActivos = null;
+                // var respuestaServicioRest = response ;
+
+                logroInvocarServicio = true;
+
+                if ((response != null) && (response.responseJSON != null)) {
+                    idSession = response.responseJSON.idSesion;
+					arregloRangoActivos = response.responseJSON.resultadoConsulta;
+					/*
+                    arregloRangoActivos = response.responseJSON.array;
+					*/
+                }
+
+                while (i < arregloRangoActivos.length) {
+
+                    rangoActivos = arregloRangoActivos[i];
+
+                    $("#valorActivos").append('<option value=' + rangoActivos.idTipoProductor + '>' + rangoActivos.rangoIngresos + '</option>');
+                    console.log($("#valorActivos").html());
+
+                    i = i + 1;
+                }
+                
+                $( "#dialogEnProceso" ).dialog( "close" );
+                
+                if ( ( idSession===null ) || ( idSession==='false' ) ) {    
+                   unData.idSession = 'false' ;    
+                }
+                else {
+                   unData.idSession = idSession ; 
+                }             
+                
+                $.ajax({
+                    url: 'http://' + dirIpServiciosREST + ':' + puertoServiciosREST + '/' + componenteServicios + '/rest/serviciosfinagro/consultarCadenasProductivas' ,
+                    type: "POST",              
+                    dataType: "json",
+                    data: unData ,
+                    complete: llenarSeccionCadenasProductivas,
+                    timeout: 20000 ,
+                    error: mostrarError
+                });                
+                
+                
+            }
+            
+            function seleccionarCheckCadena(idComponente){
+               document.getElementById(idComponente).click();
+            }            
+            
+            function llenarSeccionCadenasProductivas(response) {
+                 
+                var i = 0;
+                
+                if ((response != null) && (response.responseJSON != null)) {
+                    /*idSession = response.responseJSON.idSesion;*/
+					arregloCadenasProductivas = response.responseJSON.resultadoConsulta ;
+					/*
+                    arregloCadenasProductivas = response.responseJSON.array;
+					*/
+                }
+                $("#cadenasProductivas").append("<table>");
+                while (i < arregloCadenasProductivas.length) {
+
+                    cadenaProductiva = arregloCadenasProductivas[i];
+
+                    $("#cadenasProductivas").append("<tr><td style=\"height:3px;\">");  
+                    
+                    $("#cadenasProductivas").append("<input type=\"radio\" name=\"cadenaProductiva\" value=\"" + cadenaProductiva.id + "\" id=\"cadProd" + cadenaProductiva.id + "\" onclick=\"cadenaProductivaSeleccionada();\" style=\"padding-bottom:6px !important;\" >&nbsp;" +"<span onclick=\"seleccionarCheckCadena('cadProd"+cadenaProductiva.id+"');\">"+ cadenaProductiva.nombreCadenaProductiva +"</span>");
+                    
+                   
+                    if (cadenaProductiva.descripcionAyuda !== "") {
+
+                        /*
+                        $("#cadenasProductivas").append("&nbsp;&nbsp;&nbsp;<img id=\"opener" + i + "\"  src=\"img/icono_una_i_24px_24px.jpg\" onclick=\"mostrarTooltip('" + cadenaProductiva.descripcionAyuda + "')\" style=\"width:26px;height:26px;\"> <br>");
+                        */
+                        
+                        $("#cadenasProductivas").append("&nbsp;&nbsp;<img id=\"opener" + i + "\"  src=\"img/incognita_circulo_verde_24px_24px.png\" title=\"" + cadenaProductiva.descripcionAyuda + "\" style=\"width:24px;height:24px;\">  <br>");
+                        
+                    }
+                    $("#cadenasProductivas").append("</td></tr>");  
+                    i = i + 1;
+                }
+                $("#cadenasProductivas").append("</table>"); 
+                
+                /*unData.idSession = (idSession===null)? '' : idSession ;*/
+                /*
+                url: 'http://' + dirIpServiciosREST + ':' + puertoServiciosREST + '/' + componenteServicios + '/rest/serviciosfinagro/consultarDestinosCadenaProductiva?idSession=' + idSession,
+                */
+                $.ajax({
+                    url: 'http://' + dirIpServiciosREST + ':' + puertoServiciosREST + '/' + componenteServicios + '/rest/serviciosfinagro/consultarDestinosCadenaProductiva' ,
+                    type: "POST" ,                                  
+                    dataType: "json" ,
+                    data: unData ,
+                    complete: armarArregloDestinos ,
+                    timeout: 20000 ,
+                    error: mostrarError 
+                });                
+                
+            }
+
+            /*
+             Proposito: Llenar el arreglo 'destinosCadsProductivas' con la respuesta del servicio REST. 
+             */
+            function armarArregloDestinos(response) {
+                if ((response != null) && (response.responseJSON != null)) {
+                    /*idSession = response.responseJSON.idSesion;*/
+					
+					destinosCadsProductivas = response.responseJSON.resultadoConsulta;					
+					
+					/*
+                    destinosCadsProductivas = response.responseJSON.array;
+					*/
+                }
+                $( "#dialogEnProceso" ).dialog( "close" );
+            }
+
+            /*
+             Proposito: Llena el combo de rango de ingresos y el conjunto de radio buttons de las cadenas productivas.
+             Tambien inicia el arreglo 'destinosCadsProductivas' con los destinos de las cadenas productivas.
+             */
+            $(document).ready(function () {
+                /* Consulta la operacion REST consultarRangosIngresos */
+                var i = 0;
+                var cadenaProductiva = null;
+                
+                /*
+                var winwidth = $(window).width();
+                var delta = winwidth-102 ;
+                $("#backgroundimage").css("height", delta.toString() );
+                */
+               
+                idSession = getQueryVariable('idSession');
+                /*
+                $("#textoFooter").html(textoFooter);
+                */
+                $( "#dialogEnProceso" ).dialog( "open" );
+                
+                
+                
+                $("input.custom-combobox-input").mousedown(function(){
+                   clear_textbox();    
+                });                
+                /*
+                 La tablet de ITAC tiene winheight===1019 
+                 */
+                $("#inputComboBox").val("Seleccione el destino");
+                document.getElementById("inputComboBox").disabled = true;
+               
+                /*
+                url: 'http://' + dirIpServiciosREST + ':' + puertoServiciosREST + '/' + componenteServicios + '/rest/serviciosfinagro/consultarRangosIngresos?idSession' + ((idSession===null)? '' : '=' + idSession) ,               
+                */
+               
+                unData.idSession = (idSession===null)? '' : idSession ;
+                
+                $.ajax({
+                    url: 'http://' + dirIpServiciosREST + ':' + puertoServiciosREST + '/' + componenteServicios + '/rest/serviciosfinagro/consultarRangosIngresos' ,
+                    type: "POST",              
+                    dataType: "json",
+                    data: unData ,
+                    complete: llenarComboRangoActivos,
+                    timeout: 20000 ,
+                    error: mostrarError
+                });
+                
+            });
+
+        /*
+         Proposito: Dada una cadena productiva seleccionada, llena el combo con los destinos a financiar asociados a esta cadena productiva.   
+         */
+        function cadenaProductivaSeleccionada() {
+
+            var i = 0;
+            var cadenaProductiva;
+            var x = null;
+            var option = null;
+            var valorRadio = null;
+            /*
+            if ( ( $("#valorActivos").val()!==null ) && ( $("#valorActivos").val() === "-1" ) ) { // Ln 206            
+            */
+            if ( ( $("#valorActivos").val() === null )  || $("#valorActivos").val() === "-1" ) { 
+                mostrarVentanaError(errorEscogeCadenaProductivaAntesValActivos);
+                
+                /*
+                $(this).prop('checked', false);
+                */
+               
+                $("input[type='radio'][name='cadenaProductiva']:checked").prop('checked', false);
+               
+                return ;
+            }
+            
+            document.getElementById("inputComboBox").disabled = false;
+            while (i < arregloCadenasProductivas.length) {
+
+                cadenaProductiva = arregloCadenasProductivas[i];
+
+                valorRadio = $("input[type='radio'][name='cadenaProductiva']:checked").val();
+
+
+                if (valorRadio === "" + cadenaProductiva.id ) {
+                    break;
+                }
+
+                i = i + 1;
+            }
+
+            /* vamos a eliminar las opciones del select con id "destinoFinanciar" */
+            x = document.getElementById("combobox");
+
+            i = x.options.length - 1;
+
+            while (i >= 0) {
+                x.options.remove(i);
+                i = i - 1;
+            }
+
+            arrDestinos = destinosCadsProductivas["" + cadenaProductiva.id];
+
+            var destino = null;
+            i = 0;
+            while (i < arrDestinos.length) {
+
+                destino = arrDestinos[i];
+
+                option = document.createElement("option");
+                option.text = destino.destino;
+                option.value = destino.codDestino;
+                x.add(option);
+
+                i = i + 1;
+            }
+            /*
+            $("input.custom-combobox-input").val("Seleccione el destino");
+            */
+            $("#inputComboBox").val("Seleccione el destino") ;   
+        }
+		
+		function onSelectCombo() {
+		   alert('onSelectCombo');
+		}
+        
+
+        </script>	
+
+        <title>Finagro App</title>
+
+    </head>
+
+    <body>
+        <header class="altoHeader">
+            <div class="dropdown altoElementos" style="width:100%;padding:0px !important;">
+                <div class="altoElementos"  style="padding:0px !important;">
+
+                    <table style="height:51px;width:100%;padding:0px !important;">
+                        <tr style="padding:0px !important;">
+                            <td width="50%" style="padding:0px !important;">	
+                                <!--span-->
+                                    <a id="tres_lineas" style="padding:0px !important;" onclick="onClickMenu();" href="#">
+                                        <img id="iconoMenu1" style="display:block;top:0px;padding:0px !important;" src="img/finagro_tres_lineas_46px_46px.png" alt=""/>
+                                        <img id="iconoMenu2" style="display:none" src="img/finagro_una_linea_46px_46px.png" alt=""/>
+                                    </a>
+                                <!--/span-->
+                            </td>	
+                            <td width="50%"  style="padding:0px;">	
+                                <span style="float:right">
+                                <img  src="img/logo_finagro_cuadrado_50px_50px.png" alt=""/>
+                                </span>
+                            </td>	
+                        </tr>                                
+                    </table>                    
+                    
+                    
+                    
+                    
+                </div>
+                <div id="opcionesMenu" class="dropdown-content altoElementos">
+                    <!-- padding: 0 0 2px 0px; background-color:white; -->
+                    <div style="border-style: none; padding: 0px 0px 0px 0px;background-color:#00803E;margin-bottom:0px;"> 
+                        <a style="padding: 0 0 0 0;background-color:#00803E;" onClick='irPaginaConSessionId("infoMisional.html", idSession)' href = "#">
+                            <img  class="fixed-ratio-resize"  src="img/item_menu_finagro_alto80_font18.png" alt=""/>
+                        </a> 
+                    </div>
+                    <!-- background-color:#00803E; -->
+                    <div style="border-style: none; padding: 0px 0px 0px 0px;background-color:#FFFFFF;margin-bottom:0px;">
+                        <!-- background-color:#FFFFFF; -->
+                        <a style="padding: 0 0 0 0;background-color:#00803E;" onClick='irPaginaConSessionId("InformacionAccesoCreditoInicial.html", idSession)' href = "#"> 
+                            <img  class="fixed-ratio-resize"  src="img/informacion_acceso_a_credito_alto80_font18.png" alt="" style="margin-top:1px;">
+                        </a> 
+                    </div>
+                    <!-- Tercera opcion del menu -->
+                    <div style="border-style: none; padding: 0px 0px 0px 0px;background-color:#FFFFFF;margin-bottom:0px;">
+                        
+                        <a style="padding: 0 0 0 0;background-color:#00803E;" onClick='irPaginaConSessionId("pasosCredito.html", idSession)' href = "#"> 
+                            <img  class="fixed-ratio-resize"  src="img/item_pasos_credito_alto80_font18.png" alt="" style="margin-top:1px;">
+                        </a> 
+                    </div>     
+                    <!-- Cuarta opcion del menu -->
+                    <div style="border-style: none; padding: 0px 0px 0px 0px;background-color:#FFFFFF;margin-bottom:0px;">
+                        
+                        <a style="padding: 0 0 0 0;background-color:#00803E;" onClick='irPaginaConSessionId("acercaDe.html", idSession)' href = "#"> 
+                            <img  class="fixed-ratio-resize"  src="img/item_acerca_de_alto80_font20.png" alt="" style="margin-top:1px;">
+                        </a> 
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="cd-main-content" id="backgroundimage" onclick="cerrarMenu();"> 
+            <div class="clase-scroll-misional">	
+                <div style="border-style: none; padding: 0 0 0 1;background-color:#00803E;">
+                    <a style="padding: 0 0 0 0;background-color:#00803E;" href = "#"> 
+                        <img  class="fixed-ratio-resize"  src="img/informacion_acceso_a_credito_alto80_font18.png" alt="" style="margin-top:1px;">
+                    </a> 
+                </div>
+
+                <div class="indice-z-fondo" style="padding-left:0.5cm;margin-top:8px;">    
+
+                    <table>		   
+
+                        <!--tr>
+                            <td>	
+                                &nbsp;                        
+                            </td>
+                        </tr-->
+
+
+                        <tr>
+                            <td>
+                                <h1 class="texto-verde" style="padding-bottom:4px;">Valor de sus activos  
+
+<!-- title="% ¿Qu&eacute; tipo de productor soy? _ | Seg&uacute;n su nivel de activos y otras caracter&iacute;sticas socio-econ&oacute;micas existen diferentes tipos de productores, cada uno con condiciones espec&iacute;ficas. Se es pequeño productor si por lo menos el 75% de sus activos est&aacute;n invertidos en el sector agropecuario o que no menos de las dos terceras partes de sus ingresos provienen de la actividad agropecuaria. || Tipo de Productor Pequeño: Activos hasta $209.511.628 || Tipo de Productor Mediano: Activos hasta $3.688.585.000 || Tipo de Productor Grande: Activos superiores a $3.688.585.000"  -->
+
+                                <img id="tooltipValorActivos"  src="img/incognita_circulo_verde_24px_24px.png" 
+                                         
+                                         
+title="% ¿Qu&eacute; tipo de productor soy? _ | { Seg&uacute;n su nivel de activos y otras caracter&iacute;sticas socio-econ&oacute;micas existen diferentes tipos de productores, cada uno con condiciones espec&iacute;ficas. Se es pequeño productor si por lo menos el 75% de sus activos est&aacute;n invertidos en el sector agropecuario o que al menos las dos terceras partes de sus ingresos provienen de la actividad agropecuaria. } *" 
+                                         
+                                         
+                                         style="width:24px;height:24px;">
+                                </h1>
+                                
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>	   
+                                <div class="texto-negro-normal indice-z-fondo">
+                                    <select name="valorActivos" id="valorActivos" class="indice-z-fondo" size="1">
+                                        <option value="-1" disabled selected>Seleccione una opci&oacute;n</option>
+                                    </select>
+                                </div>		   
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td>	
+                                &nbsp;
+                            </td>
+                        </tr>	   
+
+                        <tr>
+                            <td>	   
+                                <h1 class="texto-verde">Cadena productiva a financiar</h1>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>	   
+                                <div id="cadenasProductivas" class="texto-negro-normal">
+                                </div>
+                            </td>
+                        </tr>		
+
+                        <tr>
+                            <td>
+                                &nbsp;
+                            </td>
+                        </tr>		
+
+
+                        <tr>
+                            <td>	   
+                                <h1 class="texto-verde"  style="padding-bottom:4px;">Seleccione el destino a financiar</h1>
+                            </td>
+                        </tr>				
+
+
+                        <tr>
+                            <td>	
+                                
+                                <div class="ui-widget texto-negro-normal" id="undiv">
+                                   <select id="combobox" onselect="onSelectCombo();">
+                                      <!--option value="-1" disabled selected>Seleccione el destino</option-->   
+                                   </select>
+                                </div>
+
+                            </td>
+                        </tr>						
+
+
+                        <tr>
+                            <td>
+                                &nbsp;
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <div class="div-dos-botones">
+                                    <span style="float:center">
+                                        <a id="boton_atras" style="text-decoration: none;" onclick='irPaginaConSessionId("indexStartFondo.html", idSession)' href="#">
+                                            <input type="button" class="button-izq" value="Atrás"/>
+                                        </a>
+                                    </span>
+                                    &nbsp;
+                                    &nbsp;
+                                    &nbsp;
+                                    &nbsp;
+                                    &nbsp;
+                                    &nbsp;
+                                    &nbsp;
+                                    &nbsp;
+                                    <span style="float:center">
+                                        <a id="boton_continuar" style="text-decoration: none;" onclick="onClickResultado()" href="#">
+                                            <input type="button" class="button-der" value="Continuar"/>
+                                        </a>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>  				
+                    </table>
+                    <!--div  style="margin:auto;height:30px;width:100%;"  onclick="cerrarMenu();">	                            
+                        <img  class="fixed-ratio-resize"  src="img/blanco.png" alt="" style="margin-top:1px;">
+                    </div-->		                    
+                    
+                </div>
+
+                <div id="dialog" title="Descripción">
+                    <!--p>This is an animated dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p-->
+                </div>
+
+                <div id="dialogError" title="Informaci&oacute;n" style="display:none;">
+                    <p id="textoDialogError"></p>   
+                    <br>
+                    <p style="text-align:center;">
+                        <a id="button_atras"  style="text-decoration:none;" onclick="cerrarVentana()" href="#"> 
+                            <input type="button" class="button-center" tabindex="-1" value="Aceptar"/>
+                        </a>
+                    </p>
+                </div> 
+                <div id="dialogEnProceso" title="Procesando..."  style="display:none;">
+                    <table style="width:100%;padding:0px;">
+                      <tr>
+                        <td> 
+                          <div style="padding-right:10px;">  
+                          <img  src="img/processing_icon_50px_50px.gif" alt=""/> 
+                          </div>                            
+                        </td>                          
+                        <td>                          
+                        Favor espere un momento...
+                        </td>                          
+                      </tr>
+                    </table>
+                </div>
+            </div>  <!-- Favor espere un momento ...-->
+        </main>
+
+        <footer>
+           <div id="textoFooter" class="footer-verdeoliva" align="center" onclick="cerrarMenu();">		
+              <img  class="fixed-ratio-resize"  src="img/franja_pie_pagina.png" alt=""/>
+           </div>
+        </footer>
+
+    </body>
+
+
+
+</html>
